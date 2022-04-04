@@ -64,17 +64,47 @@ async function seed() {
     })
 
 
-    const createComment = await prisma.comment.create({
+    const findPost = await prisma.post.findFirst({
+        where: {
+            id: 1
+        }
+    })
+
+    const createReply = await prisma.comment.create({
         data:
         {
             userId: findAlan.id,
-            content: 'Thankyou everyone for coming to my show last night.'
+            content: 'Good Job! so close!',
+            postId: findPost.id,
+            replyComment: {
+                create: [{
+                    userId: findAlice.id,
+                    postId: findPost.id,
+                    content: 'But i missed him again!'
+                }]
+            }
+
         }
 
     })
+    const findReply = await prisma.comment.findFirst({
+        where: {
+            replyId: 1
+        }
+    })
+    const createReply2 = await prisma.comment.create({
+        data:
+        {
+            userId: findAlice.id,
+            content: 'hopefully ill catch him soon!',
+            postId: findPost.id,
+            replyId: findReply.id
+        }
+    })
 
     console.log(createProfile)
-    console.log(createComment)
+    console.log(createReply)
+    console.log(createReply2)
     // Don't edit any of the code below this line
     process.exit(0);
 }
